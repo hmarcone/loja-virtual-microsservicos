@@ -61,8 +61,7 @@ public class ProductService : IProductService
     {
         var client = _clientFactory.CreateClient("ProductApi");
 
-        StringContent content = new StringContent(JsonSerializer.Serialize(productVM),
-                                Encoding.UTF8, "application/json");
+        StringContent content = new StringContent(JsonSerializer.Serialize(productVM), Encoding.UTF8, "application/json");
 
         using (var response = await client.PostAsync(apiEndpoint, content))
         {
