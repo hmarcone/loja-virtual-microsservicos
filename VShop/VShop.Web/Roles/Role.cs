@@ -1,8 +1,6 @@
-﻿namespace VShop.Web.Roles
+﻿namespace VShop.Web.Roles;
+public static class Role
 {
-    public static class Role
-    {
-        public const string Admin = "Admin";
-        public const string Client = "Client";
-    }
+    public const string Admin = "Admin";
+    public const string Client = "Client";
 }

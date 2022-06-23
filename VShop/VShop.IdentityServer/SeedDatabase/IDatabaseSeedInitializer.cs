@@ -1,8 +1,7 @@
-﻿namespace VShop.IdentityServer.SeedDatabase
+﻿namespace VShop.IdentityServer.SeedDatabase;
+
+public interface IDatabaseSeedInitializer
 {
-    public interface IDatabaseSeedInitializer
-    {
-        void InitializeSeedRoles();
-        void InitializeSeedUsers();
-    }
+    void InitializeSeedRoles();
+    void InitializeSeedUsers();    
 }

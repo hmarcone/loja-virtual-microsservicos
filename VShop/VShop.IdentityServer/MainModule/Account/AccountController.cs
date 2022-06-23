@@ -43,7 +43,7 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IEventService _events;
 
         public AccountController(
-            IIdentityServerInteractionService interaction,
+           IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             IIdentityProviderStore identityProviderStore,
@@ -125,16 +125,15 @@ namespace IdentityServerHost.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-                // validate username/password against in-memory store
+                //// validate username/password against in-memory store
                 //if (_users.ValidateCredentials(model.Username, model.Password))
                 //{
                 //    var user = _users.FindByUsername(model.Username);
-
                 var result = await _signInManager.PasswordSignInAsync(
-                model.Username,
-                model.Password,
-                model.RememberLogin,
-                lockoutOnFailure: false);
+                  model.Username,
+                  model.Password,
+                  model.RememberLogin,
+                  lockoutOnFailure: false);
 
                 // validate username/password against in-memory store
                 if (result.Succeeded)
@@ -234,7 +233,6 @@ namespace IdentityServerHost.Quickstart.UI
             {
                 // delete local authentication cookie
                 //await HttpContext.SignOutAsync();
-
                 await _signInManager.SignOutAsync();
 
                 // raise the logout event

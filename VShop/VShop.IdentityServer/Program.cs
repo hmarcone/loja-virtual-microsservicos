@@ -19,21 +19,21 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-//configurações dos serviços do IdentityServer
-var builderIdentityServer = builder.Services.AddIdentityServer(options =>
-{
-    options.Events.RaiseErrorEvents = true;
-    options.Events.RaiseInformationEvents = true;
-    options.Events.RaiseFailureEvents = true;
-    options.Events.RaiseSuccessEvents = true;
-    options.EmitStaticAudienceClaim = true;
-}).AddInMemoryIdentityResources(
-                       IdentityConfiguration.IdentityResources)
-                       .AddInMemoryApiScopes(IdentityConfiguration.ApiScopes)
-                       .AddInMemoryClients(IdentityConfiguration.Clients)
-                       .AddAspNetIdentity<ApplicationUser>();
+     //configurações dos serviços do IdentityServer
+    var builderIdentityServer = builder.Services.AddIdentityServer(options =>
+    {
+        options.Events.RaiseErrorEvents = true;
+        options.Events.RaiseInformationEvents = true;
+        options.Events.RaiseFailureEvents = true;
+        options.Events.RaiseSuccessEvents = true;
+        options.EmitStaticAudienceClaim = true;
+    }).AddInMemoryIdentityResources(
+                           IdentityConfiguration.IdentityResources)
+                           .AddInMemoryApiScopes(IdentityConfiguration.ApiScopes)
+                           .AddInMemoryClients(IdentityConfiguration.Clients)
+                           .AddAspNetIdentity<ApplicationUser>();
 
-builderIdentityServer.AddDeveloperSigningCredential();
+    builderIdentityServer.AddDeveloperSigningCredential();
 
 builder.Services.AddScoped<IDatabaseSeedInitializer, DatabaseIdentityServerInitializer>();
 // builder.Services.AddScoped<IProfileService, ProfileService>();
