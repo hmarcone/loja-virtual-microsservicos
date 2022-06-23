@@ -7,8 +7,8 @@
   },
   "AllowedHosts": "*",
   "ServiceUri": {
-    "ProductApi": "https://localhost:7039",
-    "IdentityServer": "https://localhost:7213"
+    "ProductApi": "https://localhost:7039/",
+    "IdentityServer": "https://localhost:7013/"
   },
   "Client": {
     "Secret": "abracadabra#simsalabim"

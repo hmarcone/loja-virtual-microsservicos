@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VShop.IdentityServer.Configuration;
 using VShop.IdentityServer.Data;
+using VShop.IdentityServer.SeedDatabase;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
+//configurações dos serviços do IdentityServer
 var builderIdentityServer = builder.Services.AddIdentityServer(options =>
 {
     options.Events.RaiseErrorEvents = true;
@@ -26,12 +28,15 @@ var builderIdentityServer = builder.Services.AddIdentityServer(options =>
     options.Events.RaiseSuccessEvents = true;
     options.EmitStaticAudienceClaim = true;
 }).AddInMemoryIdentityResources(
-                           IdentityConfiguration.IdentityResources)
-                            .AddInMemoryApiScopes(IdentityConfiguration.ApiScopes)
-                            .AddInMemoryClients(IdentityConfiguration.Clients)
-                           .AddAspNetIdentity<ApplicationUser>();
+                       IdentityConfiguration.IdentityResources)
+                       .AddInMemoryApiScopes(IdentityConfiguration.ApiScopes)
+                       .AddInMemoryClients(IdentityConfiguration.Clients)
+                       .AddAspNetIdentity<ApplicationUser>();
 
 builderIdentityServer.AddDeveloperSigningCredential();
+
+builder.Services.AddScoped<IDatabaseSeedInitializer, DatabaseIdentityServerInitializer>();
+// builder.Services.AddScoped<IProfileService, ProfileService>();
 
 var app = builder.Build();
 
@@ -39,10 +44,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -50,8 +52,22 @@ app.UseRouting();
 app.UseIdentityServer();
 app.UseAuthorization();
 
+SeedDatabaseIdentityServer(app);
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void SeedDatabaseIdentityServer(IApplicationBuilder app)
+{
+    using (var serviceScope = app.ApplicationServices.CreateScope())
+    {
+        var initRolesUsers = serviceScope.ServiceProvider
+                               .GetService<IDatabaseSeedInitializer>();
+
+        initRolesUsers.InitializeSeedRoles();
+        initRolesUsers.InitializeSeedUsers();
+    }
+}
