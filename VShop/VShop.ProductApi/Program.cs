@@ -9,16 +9,18 @@ using VShop.ProductApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+       {
+           options.JsonSerializerOptions.ReferenceHandler =
+               ReferenceHandler.IgnoreCycles;
+       });
 
-builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "VShop.ProductApi", Version = "v1" });
-
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"'Bearer' [space] seu token",
@@ -28,7 +30,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer"
     });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement 
     {
          {
             new OpenApiSecurityScheme
@@ -55,6 +57,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
+
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -62,15 +72,15 @@ builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddAuthentication("Bearer")
        .AddJwtBearer("Bearer", options =>
-       {
-           options.Authority =
-             builder.Configuration["VShop.IdentityServer:ApplicationUrl"];
+        {
+            options.Authority =
+              builder.Configuration["VShop.IdentityServer:ApplicationUrl"];
 
-           options.TokenValidationParameters = new TokenValidationParameters
-           {
-               ValidateAudience = false
-           };
-       });
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false
+            };
+        });
 
 builder.Services.AddAuthorization(options =>
 {
