@@ -4,7 +4,7 @@ using VShop.CartApi.Repositories;
 
 namespace VShop.CartApi.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class CartController : ControllerBase
 {
@@ -15,10 +15,10 @@ public class CartController : ControllerBase
         _repository = repository;
     }
 
-    [HttpGet("getcart/{id}")]
-    public async Task<ActionResult<CartDTO>> GetByUserId(string userId)
+    [HttpGet("getcart/{userid}")]
+    public async Task<ActionResult<CartDTO>> GetByUserId(string userid)
     {
-        var cartDto = await _repository.GetCartByUserIdAsync(userId);
+        var cartDto = await _repository.GetCartByUserIdAsync(userid);
 
         if (cartDto is null)
             return NotFound();
