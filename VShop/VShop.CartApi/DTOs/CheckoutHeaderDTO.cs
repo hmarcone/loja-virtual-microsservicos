@@ -1,6 +1,6 @@
-﻿namespace VShop.Web.Models;
+﻿namespace VShop.CartApi.DTOs;
 
-public class CartHeaderViewModel
+public class CheckoutHeaderDTO
 {
     public int Id { get; set; }
     public string UserId { get; set; } = string.Empty;
@@ -8,7 +8,7 @@ public class CartHeaderViewModel
 
     public decimal TotalAmount { get; set; } = 0.00m;
 
-    //Receber o desconto
+    //desconto
     public decimal Discount { get; set; } = 0.00m;
 
     //checkout
@@ -20,5 +20,8 @@ public class CartHeaderViewModel
     public string CardNumber { get; set; } = string.Empty;
     public string NameOnCard { get; set; } = string.Empty;
     public string CVV { get; set; } = string.Empty;
-    public string ExpireMonthYear { get; set; } = string.Empty;
+    public string ExpireMothYear { get; set; } = string.Empty;
+    //
+    public int CartTotalItens { get; set; }
+    public IEnumerable<CartItemDTO>? CartItems { get; set; }
 }
